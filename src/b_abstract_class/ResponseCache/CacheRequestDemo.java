@@ -1,4 +1,4 @@
-package b_abstract_class;
+package b_abstract_class.ResponseCache;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
