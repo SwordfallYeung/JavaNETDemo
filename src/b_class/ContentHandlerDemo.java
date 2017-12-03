@@ -1,4 +1,4 @@
-package b_abstract_class;
+package b_class;
 
 /**
  * @author y15079

@@ -1,4 +1,4 @@
-package b_abstract_class.ResponseCache;
+package b_class.ResponseCache;
 
 import java.io.*;
 import java.net.CacheResponse;

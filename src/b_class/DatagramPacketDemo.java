@@ -1,4 +1,4 @@
-package b_abstract_class;
+package b_class;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

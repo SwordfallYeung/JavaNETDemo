@@ -1,7 +1,4 @@
-package b_abstract_class.ResponseCache;
-
-import b_abstract_class.ResponseCache.CacheRequestDemo;
-import b_abstract_class.ResponseCache.CacheResponseDemo;
+package b_class.ResponseCache;
 
 import java.io.IOException;
 import java.net.*;

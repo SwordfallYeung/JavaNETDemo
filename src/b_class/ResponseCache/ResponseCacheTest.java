@@ -1,6 +1,4 @@
-package b_abstract_class.ResponseCache;
-
-import b_abstract_class.ResponseCache.ResponseCacheDemo;
+package b_class.ResponseCache;
 
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
