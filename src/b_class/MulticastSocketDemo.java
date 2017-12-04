@@ -26,7 +26,7 @@ public class MulticastSocketDemo implements Runnable{
     //定义每个数据报的最大大小为4k
     private static final int DATA_LEN=4096;
     //定义本程序的MulticastSocket实例
-    private MulticastSocket socket=null;
+    private MulticastSocket multicastSocket=null;
     private InetAddress broadcastAddress=null;
     private Scanner scan=null;
     //定义接收网络数据的字节数组
@@ -41,13 +41,13 @@ public class MulticastSocketDemo implements Runnable{
         try {
             //创建用于发送,接收数据的MulticastSocket对象
             //因为该MulticastSocket对象需要接收,所以有指定端口
-            socket=new MulticastSocket(BROADCAST_PORT);
+            multicastSocket=new MulticastSocket(BROADCAST_PORT);
             broadcastAddress=InetAddress.getByName(BROADCAST_IP);
 
             //将该socket加入指定的多点广播地址
-            socket.joinGroup(broadcastAddress);
+            multicastSocket.joinGroup(broadcastAddress);
             //设置本MulticastSocket发送的数据报被回送到自身
-            socket.setLoopbackMode(false);
+            multicastSocket.setLoopbackMode(false);
             //初始化发送用的DatagramSocket,它包含一个长度为0的字节数组
             outPacket=new DatagramPacket(new byte[0],0,broadcastAddress,BROADCAST_PORT);
 
@@ -62,15 +62,13 @@ public class MulticastSocketDemo implements Runnable{
                 //设置发送用的DatagramPacket里的字节数据
                 outPacket.setData(buff);
                 //发送数据报
-                socket.send(outPacket);
+                multicastSocket.send(outPacket);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            socket.close();
+            multicastSocket.close();
         }
-
-
     }
 
     @Override
@@ -78,18 +76,18 @@ public class MulticastSocketDemo implements Runnable{
         try {
             while (true){
                 //读取Socket中的数据,读到的数据放在inPacket所封装的字节数组里.
-                socket.receive(inPacket);
+                multicastSocket.receive(inPacket);
                 //打印输出从socket中读取的内容
                 System.out.println("test聊天信息: "+new String(inBuff,0,inPacket.getLength()));
             }
         } catch (IOException e) {
             e.printStackTrace();
             try {
-                if (socket!=null){
+                if (multicastSocket!=null){
                     //让该Socket离开该多点IP广播地址
-                    socket.leaveGroup(broadcastAddress);
+                    multicastSocket.leaveGroup(broadcastAddress);
                     //关闭该Socket对象
-                    socket.close();
+                    multicastSocket.close();
                 }
                 System.exit(1);
             } catch (IOException e1) {
