@@ -12,6 +12,8 @@ import java.lang.reflect.Proxy;
  * 该类代表一个代理设置，典型的类型（http，socks）和一个socket地址。一个代理是不可变的对象。
  *
  *  Proxy(Proxy.Type type ，SocketAddress sa)
+ *  address() 返回代理socket地址.如果它是一个直连接则空
+ *  type()  返回代理类型
  **/
 public class ProxyDemo {
 
