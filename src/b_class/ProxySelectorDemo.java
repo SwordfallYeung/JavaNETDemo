@@ -1,10 +1,10 @@
 package b_class;
 
+import java.io.IOException;
 import java.io.PrintStream;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -28,31 +28,40 @@ import java.util.Scanner;
  *   3) Proxy构造器:Proxy(Proxy.Type type, SocketAddress sa);
  *   4) openConnection时指定代理:URLConnection URL.openConnection(Proxy proxy);//用指定的代理服务器代开连接
  *   5) 指定socket使用代理服务器:Socket(Proxy proxy);
+ *
+ * 3.ProxySelector-----自动代理选择器:
+ *   1)上面直接显示传入Proxy对象.
+ *   2)Java提供了一个抽象类ProxySelector,该类的对象可以根据你要连接的URL自动选择最合适的代理.
+ *   3)选择器实现完毕后就可以创建选择器的对象实例
+ *   4)ProxySelector:其中有两个重要的方法需要实现
+ *      i.List<Proxy> select(URI uri)
+ *      ii.void connectFailed(URI uri,SocketAddress sa, IOException ioe)
+ *
  **/
 public class ProxySelectorDemo {
 
-    //代理服务器的IP和端口
-    private final String PROXY_ADDR="129.82.12.188";
+    private final String PROXY_ADDR="139.82.12.188";
     private final int PROXY_PORT=3124;
 
-    public void init() throws Exception{
-        URL url=new URL("http:www.baidu.com");//想访问的网址
-        Proxy proxy=new Proxy(Proxy.Type.HTTP,new InetSocketAddress(PROXY_ADDR,PROXY_PORT));
-        URLConnection urlConnection=url.openConnection(proxy);//连接时设置代理
-        urlConnection.setConnectTimeout(3000);
+    public void init(){
+        ProxySelector.setDefault(new ProxySelector() {
+            @Override
+            public List<Proxy> select(URI uri) {//默认任何URI都返回一个代理
+                List<Proxy> list=new ArrayList<>();
+                list.add(new Proxy(Proxy.Type.HTTP,new InetSocketAddress(PROXY_ADDR,PROXY_PORT)));
+                return list;
+            }
 
-        Scanner scanner=new Scanner(urlConnection.getInputStream());
-        PrintStream ps=new PrintStream("index.htm");
-        while (scanner.hasNextLine()){
-            //直接将返回的网页代码下载到本地的index.htm文件中
-            String line=scanner.nextLine();
-            System.out.println(line);
-            ps.println(line);
-        }
+            @Override
+            public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {//简单地打印信息
+                System.out.println("无法连接到代理!");
+            }
+        });
+        //正常的访问网络
     }
 
-    public static void main(String[] args) throws Exception {
-            new ProxySelectorDemo().init();
+    public static void main(String[] args) {
+        new ProxySelectorDemo().init();
     }
 }
 
