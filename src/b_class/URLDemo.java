@@ -1,11 +1,10 @@
 package b_class;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  * @author y15079
@@ -98,5 +97,49 @@ public class URLDemo {
 		uc.setRequestProperty("Content-type","appliction/x-www-form-urlencoded");
 
 		//建立名/值对内容发送给服务器
+		String content=buildContent(new String[]{"content","name3"});
+
+		//连接的适当类型
+		HttpURLConnection hc=(HttpURLConnection)uc;
+
+		//把HTTP请求方法设置为POST (默认的是GET)
+		hc.setRequestMethod("POST");
+
+		//输出内容
+		OutputStream os=uc.getOutputStream();
+		DataOutputStream dos=new DataOutputStream(os);
+		dos.writeBytes(content);
+		dos.flush();
+		dos.close();
+
+		//从服务器程序资源输入和显示内容
+		InputStream is=uc.getInputStream();
+
+		int ch;
+		while ((ch=is.read())!=-1){
+			System.out.print((char)ch);
+		}
+
+		is.close();
+	}
+
+	static String buildContent(String [] args){
+		StringBuffer sb=new StringBuffer();
+
+		for (int i=0;i<args.length;i++){
+			//对参数编码
+			String encodedItem= URLEncoder.encode(args[i]);
+			sb.append(encodedItem);
+
+			if (i%2==0){
+				sb.append("=");//分离名称和值
+			}else {
+				sb.append("&");//分离名称/值对
+			}
+		}
+
+		//删除最后的&间隔符
+		sb.setLength(sb.length()-1);
+		return sb.toString();
 	}
 }
